@@ -4,8 +4,13 @@
       <side-menu></side-menu>
     </el-aside>
     <el-container>
-      <el-header class="header">header</el-header>
-      <view-container></view-container>
+      <el-header class="header">
+        <el-button type="text" disabled>{{name}}</el-button>
+        <el-button type="text" @click="logout">logout</el-button>
+      </el-header>
+      <el-main>
+        <view-container></view-container>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -13,14 +18,26 @@
 <script>
 import SideMenu from '@/components/SideMenu'
 import ViewContainer from '@/components/ViewContainer'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Layout',
   components: {
     SideMenu,
     ViewContainer
+  },
+  computed: {
+    ...mapGetters({
+      name: 'username'
+    })
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch('logout').then(() => {
+        this.$router.push({path: '/login'})
+      })
+    }
   }
-  
 }
 </script>
 
@@ -32,8 +49,8 @@ export default {
   height: 100%;
 }
 .header {
-  background-color: #B3C0D1;
-  color: #333;
   line-height: 60px;
+  border-bottom: 1px solid #ddd;
+  text-align: right;
 }
 </style>

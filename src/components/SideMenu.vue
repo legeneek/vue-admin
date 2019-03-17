@@ -1,20 +1,40 @@
 <template>
   <el-menu class="side-menu" :default-active="$route.path">
-    <router-link to="/user">
-      <el-menu-item index="/user" >用户管理</el-menu-item>
-    </router-link>
-    <el-submenu index="2">
-      <template slot="title">menu-2</template>
-      <el-menu-item index="2-1">menu-item-2-1</el-menu-item>
-    </el-submenu>
+    <menu-item v-for="(r,i) in routes" :key="i" :route="r"></menu-item>
   </el-menu>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import routes from '@/router'
+import MenuItem from '@/components/MenuItem'
+import { check } from '@/utils/role'
+
 export default {
   name: 'SideMenu',
-  data() {
-    return {
+  components: {
+    MenuItem
+  },
+  computed: {
+    ...mapGetters(['roles']),
+    routes() {
+      const me = this
+
+      function getRoutes (routes) {
+        let res = []
+        routes.map(r => {
+          if (!r.hide && check(me.roles, r.roles)) {
+            const route = {...r}
+            res.push(route)
+            if (Array.isArray(route.children)) {
+              route.children = getRoutes(route.children)
+            }
+          }
+        })
+        return res
+      }
+
+      return getRoutes(routes)
     }
   }
 }
@@ -22,7 +42,7 @@ export default {
 
 <style>
 .side-menu {
-  height: 100%;
+  min-height: 100%;
 }
 </style>
 

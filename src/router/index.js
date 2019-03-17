@@ -1,42 +1,69 @@
 import Login from '@/views/Login'
 import Layout from '@/components/Layout'
-import Welcome from '@/views/Welcome'
+import Dashboard from '@/views/Dashboard'
 import Users from '@/views/Users'
 
 const routes = [
   {
     path: '/login',
-    component: Login
+    component: Login,
+    hide: true
   },
   {
     path: '/404',
-    component: () => import('@/views/NotFound')
+    component: () => import('@/views/NotFound'),
+    hide: true
   },
   {
     path: '/',
+    redirect: '/dashboard',
+    hide: true
+  },
+  {
+    path: '/dashboard',
     component: Layout,
-    redirect: '/welcome',
     children: [
       {
-        path: '/welcome',
-        component: Welcome
+        path: '',
+        component: Dashboard,
+        name: 'Dashboard'
       }
     ]
   },
   {
     path: '/user',
-    name: 'user',
     component: Layout,
+    roles: ['admin'],
     children: [
       {
         path: '',
-        component: Users
+        component: Users,
+        name: 'Users'
+      }
+    ]
+  },
+  {
+    path: '/submenu',
+    component: Layout,
+    title: 'Submenu',
+    children: [
+      {
+        path: '1',
+        component: () => import('@/views/SubView'),
+        name: 'sub-1'
+      },
+      {
+        path: '2',
+        component: () => import('@/views/SubView2'),
+        name: 'sub-2',
+        roles: ['admin']
       }
     ]
   },
   {
     path: '*',
-    redirect: '/404'
+    redirect: '/404',
+    hide: true
   }
 ]
 

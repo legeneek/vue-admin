@@ -74,13 +74,9 @@ module.exports = {
       '@': resolve('src')
     }
   },
+  devtool: 'source-map',
   devServer: {
-    historyApiFallback: {
-      verbose: true,
-      rewrites: [
-        { from: /.*/, to: '/index.html' },
-      ],
-    },
+    historyApiFallback: true,
     headers: {
       'Access-Control-Allow-Origin': '*',
     },
